@@ -25,8 +25,8 @@ class Mention
         if text =~ /(明日|あした).*(天気|てんき)/
             weather_obj = Weather.new
             info = weather_obj.do_process(400030)
-            reply =  "明日の飯塚市のお天気は【#{info.tmrwTelop}】\n"
-            reply += "最低気温は【#{info.tmrwTempMin}℃】\n最高気温は【#{info.tmrwTempMax}℃】です❗"
+            reply =  "明日の飯塚市のお天気は【#{info.tmrw_telop}】\n"
+            reply += "最低気温は【#{info.tmrw_temp_min}℃】\n最高気温は【#{info.tmrw_temp_max}℃】です❗"
             return reply
         end
     
