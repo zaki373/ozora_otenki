@@ -172,7 +172,6 @@ class OzoraOtenki
             news_list = news.get_list(now)
 
             if !news_list.empty?
-                print "\n"
                 tweet_list = []
                 url_size   = 12
                 tweet_size = 10
