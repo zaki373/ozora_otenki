@@ -65,11 +65,6 @@ def main_process()
         print_log("メンション取得中")
         bot.mention_tweet()
 
-        if now.min % @FOLLOW_BACK_PER_M == 0
-            print_log("フォロー情報取得中")
-            bot.follow_back()
-        end
-
         if now.min % @NEWS_TWEET_PER_M == 0
             print_log("ニュース取得中")
             bot.news_tweet(now)
