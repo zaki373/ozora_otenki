@@ -6,8 +6,8 @@ require_relative "ozora_otenki"
 @WEATHER_TWEET_MIN  = 30
 
 #天気APIのエリアコード設定
-@AREA_CODE_IZUKA    = 400030
-@AREA_CODE_YOKOHAMA = 140010
+@AREA_CODE_IZUKA    = "izuka"
+@AREA_CODE_YOKOHAMA = "yokohama"
 
 #番組表の検索ワード設定
 @SEARCH_WORD        = "アイカツ！"

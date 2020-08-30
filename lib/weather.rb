@@ -1,68 +1,45 @@
-require 'httpclient'
-require 'resolv'
-require 'json'
+require 'open-uri'
+require 'net/http'
+require "nokogiri"
 require_relative 'weather_info'
 
 class Weather
     
     #コンストラクタ
     def initialize()
-        @DESCRIPTION = "description"
-        @TEXT = "text"
-        @FORECASTS = "forecasts"
-        @TELOP = "telop"
-        @DATE = "date"
-        @TEMPERATURE = "temperature"
-        @CELSIUS = "celsius"
-        @MIN = "min"
-        @MAX = "max"
-        @TODAY = 0
-        @TMRW = 1
-        @LOCATION = "location"
-        @CITY = "city"
     end
 
     #メイン処理
     def do_process(area_code)
-        keyword = area_code
-        url = "http://weather.livedoor.com/forecast/webservice/json/v1"
-        return analysis_weather(con_API(keyword, url))
-    end
-
-    #API接続
-    def con_API(keyWord, url)
-        client = HTTPClient.new
-        query = { 'city' => keyWord }
-        res = client.get(url, query)
-        return JSON.parse(res.body)
-    end
-
-    #ハッシュ解析
-    def analysis_weather(hash)
-
         info = WeatherInfo.new
 
-        info.city = convert_nil(hash.dig(@LOCATION, @CITY))
-        # 概要の取得
-        info.description = convert_nil(hash.dig(@DESCRIPTION, @TEXT))
+        info.today = Time.now.strftime("%Y/%m/%d")
+        info.tmrw  = (Time.now + 86400).strftime("%Y/%m/%d")
 
-        # 本日の天気情報
-        info.today_telop = convert_nil(hash.dig(@FORECASTS, @TODAY, @TELOP))
-        info.today = convert_nil(hash.dig(@FORECASTS, @TODAY, @DATE))
-        info.today_temp_min = convert_nil(hash.dig(@FORECASTS, @TODAY, @TEMPERATURE, @MIN, @CELSIUS))
-        info.today_temp_max = convert_nil(hash.dig(@FORECASTS, @TODAY, @TEMPERATURE, @MAX, @CELSIUS))
+        if (area_code == "izuka")
+            url = "https://www.drk7.jp/weather/xml/40.xml"
+            xml = Nokogiri::XML(open(url).read)
+            
+            today_path = xml.xpath('//area[@id="筑豊地方"]').xpath("./info[@date='#{info.today}']")
+            tmrw_path  = xml.xpath('//area[@id="筑豊地方"]').xpath("./info[@date='#{info.tmrw}']")
 
-        # 明日の天気情報
-        info.tmrw_telop = convert_nil(hash.dig(@FORECASTS, @TMRW, @TELOP))
-        info.tmrw = convert_nil(hash.dig(@FORECASTS, @TMRW, @DATE))
-        info.tmrw_temp_min = convert_nil(hash.dig(@FORECASTS, @TMRW, @TEMPERATURE, @MIN, @CELSIUS))
-        info.tmrw_temp_max = convert_nil(hash.dig(@FORECASTS, @TMRW, @TEMPERATURE, @MAX, @CELSIUS))
+        elsif (area_code == "yokohama")
+            url = "https://www.drk7.jp/weather/xml/14.xml"
+            xml = Nokogiri::XML(open(url).read)
+            
+            today_path = xml.xpath('//area[@id="東部"]').xpath("./info[@date='#{info.today}']")
+            tmrw_path  = xml.xpath('//area[@id="東部"]').xpath("./info[@date='#{info.tmrw}']")
+
+        end
+
+        info.today_telop = today_path.xpath('./weather').text
+        info.today_temp_max = today_path.xpath('./temperature[@unit="摂氏"]').xpath('./range[@centigrade="max"]').text
+        info.today_temp_min = today_path.xpath('./temperature[@unit="摂氏"]').xpath('./range[@centigrade="min"]').text
+
+        info.tmrw_telop = tmrw_path.xpath('./weather').text
+        info.tmrw_temp_max = tmrw_path.xpath('./temperature[@unit="摂氏"]').xpath('./range[@centigrade="max"]').text
+        info.tmrw_temp_min = tmrw_path.xpath('./temperature[@unit="摂氏"]').xpath('./range[@centigrade="min"]').text
 
         return info
-    end
-
-    # nilだったら-に置き換え
-    def convert_nil(value)
-        return value == nil ? "－" : value
     end
 end

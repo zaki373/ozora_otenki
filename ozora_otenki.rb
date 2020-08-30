@@ -54,7 +54,7 @@ class OzoraOtenki
 
             tweet =  "みなさん、おはようございます❗\n"
             tweet += "時刻は#{now.hour}時#{now.min}分\n今日のお空はどんな空～❓\n"
-            tweet += "大空お天気の時間です❗\n今日の#{info.city}市のお天気は【#{info.today_telop}】\n"
+            tweet += "大空お天気の時間です❗\n今日の飯塚市のお天気は【#{info.today_telop}】\n"
             tweet += "最高気温は【#{info.today_temp_max}℃】です❗"
 
             images = []
@@ -74,8 +74,8 @@ class OzoraOtenki
         begin 
             info = weather_obj.do_process(area_code_yokohama)
 
-            tweet =  "続いて#{info.city}市のお天気です❗\n"
-            tweet += "今日の#{info.city}市のお天気は【#{info.today_telop}】\n"
+            tweet =  "続いて横浜市のお天気です❗\n"
+            tweet += "今日の横浜市のお天気は【#{info.today_telop}】\n"
             tweet += "最高気温は【#{info.today_temp_max}℃】です❗\n"
             tweet += "それでは皆さん、通勤・通学気をつけて❗\nいってらっしゃい👋"
 
