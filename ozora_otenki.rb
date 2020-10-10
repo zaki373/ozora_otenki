@@ -215,7 +215,7 @@ class OzoraOtenki
                     @client.favorite(tweet.id)
                     update_id = tweet.id if tweet.id > update_id
 
-                    print_info("返信: #{msg} => @#{tweet.user.screen_name} #{tweet.text.gsub("\n", " ")}")
+                    print_info("返信: #{reply} => @#{tweet.user.screen_name} #{tweet.text.gsub("\n", " ")}")
                 end
 
                 if update_id != -1
