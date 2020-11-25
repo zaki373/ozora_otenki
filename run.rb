@@ -9,6 +9,10 @@ require_relative "ozora_otenki"
 @AREA_CODE_IZUKA    = "izuka"
 @AREA_CODE_YOKOHAMA = "yokohama"
 
+#番組情報ツイートの時間設定
+@TV_TWEET_HOUR      = 0
+@TV_TWEET_MIN       = 0
+
 #番組表の検索ワード設定
 @SEARCH_WORD        = "アイカツ！"
 
@@ -53,9 +57,12 @@ def main_process()
             bot.weather_tweet_izuka(@AREA_CODE_IZUKA, now)
             print_log("天気情報(横浜)取得中")
             bot.weather_tweet_yokohama(@AREA_CODE_YOKOHAMA, now)
+        end
+        if now.hour == @TV_TWEET_HOUR && now.min == @TV_TWEET_MIN
             print_log("番組情報取得中")
             bot.tv_tweet(@SEARCH_WORD)
-        elsif now.hour == @BDAY_TWEET_HOUR && now.min == @BDAY_TWEET_MIN
+        end
+        if now.hour == @BDAY_TWEET_HOUR && now.min == @BDAY_TWEET_MIN
             print_log("誕生日情報取得中")
             bot.birthday_tweet(now)
             if now.month == @AKARI_BD_MONTH && now.day == @AKARI_BD_DAY
